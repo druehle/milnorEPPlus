@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Milnor E-P Plus Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="panel-shell">
+    <section class="panel">
+      <header class="panel-header">
+        <div class="logo">
+          <span class="logo-text">MILNOR</span>
+        </div>
+        <div class="title-block">
+          <span class="title">E-P Plus<sup>®</sup></span>
+          <span class="subtitle">CONTROL</span>
+        </div>
+      </header>
+
+      <section class="panel-body">
+        <div class="nav-column">
+          <button class="control-btn arrow up" aria-label="Up Arrow" title="Up Arrow">
+            <span>▲</span>
+          </button>
+          <button class="control-btn arrow down" aria-label="Down Arrow" title="Down Arrow">
+            <span>▼</span>
+          </button>
+        </div>
+
+        <div class="display-column">
+          <div class="display-window" aria-label="Information Display">
+            <div class="display-primary">
+              <div class="display-line">01234567890123456789</div>
+              <div class="display-line">SELECT CYCLE NOW</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-footer">
+        <button class="control-btn program" aria-label="Program 1" title="Program 1">
+          <span class="indicator green"></span>
+          <span class="label">1</span>
+        </button>
+
+        <button class="control-btn stop" aria-label="Stop" title="Stop">
+          <span class="icon hand"></span>
+        </button>
+
+        <button class="control-btn frame" aria-label="Frame Select" title="Frame Select">
+          <span class="icon frame"></span>
+        </button>
+
+        <button class="control-btn option" aria-label="Option Confirm" title="Option Confirm">
+          <span class="indicator green"></span>
+          <span class="icon dial" aria-hidden="true">
+            <span class="dial-bulb"></span>
+            <span class="dial-slash"></span>
+          </span>
+        </button>
+
+        <button class="control-btn confirm" aria-label="Cycle Start" title="Cycle Start">
+          <span class="icon check">✔</span>
+        </button>
+      </section>
+    </section>
+    <div class="definition-container">
+      <div class="definition-window">
+        <div class="definition-label">information</div>
+        <div class="definition-text">Use arrow keys to navigate.</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
