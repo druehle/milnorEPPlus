@@ -308,7 +308,7 @@ function handleProgramMenuConfirm() {
       render();
       break;
     default:
-      showMessage('NOT AVAILABLE', 'USE OPTION 1', { nextMode: 'programMenu' });
+      showMessage('NOT AVAILABLE', 'USE 1 ADD/CHANGE', { nextMode: 'programMenu' });
       break;
   }
 }
