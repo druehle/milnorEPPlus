@@ -259,7 +259,15 @@ function handleConfirm() {
 
 function handleStop() {
   if (state.mode === 'message') return;
-  if (state.mode === 'formulaSelect' || state.mode === 'stepEdit') {
+  if (state.mode === 'stepEdit') {
+    if (state.stepPhase === 'decision') {
+      exitStepDecisionMode();
+    } else {
+      goToFormulaSelect();
+    }
+    return;
+  }
+  if (state.mode === 'formulaSelect') {
     goToProgramMenu();
   }
 }
@@ -594,6 +602,25 @@ function goToProgramMenu() {
   state.menuIndex = 0;
   state.stepPhase = 'select';
   state.selectedStepIndex = 0;
+  state.activeStepIndex = null;
+  state.decisionIndex = 0;
+  resetChemicalState();
+  resetDurationStage();
+  render();
+}
+
+function goToFormulaSelect() {
+  state.mode = 'formulaSelect';
+  state.stepPhase = 'select';
+  state.activeStepIndex = null;
+  state.decisionIndex = 0;
+  resetChemicalState();
+  resetDurationStage();
+  render();
+}
+
+function exitStepDecisionMode() {
+  state.stepPhase = 'select';
   state.activeStepIndex = null;
   state.decisionIndex = 0;
   resetChemicalState();
