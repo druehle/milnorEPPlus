@@ -261,15 +261,64 @@ function handleStop() {
   if (state.mode === 'message') return;
   if (state.mode === 'stepEdit') {
     if (state.stepPhase === 'decision') {
-      exitStepDecisionMode();
+      const moved = stepDecisionBack();
+      if (moved) {
+        render();
+      } else {
+        exitStepDecisionMode();
+      }
     } else {
-      goToFormulaSelect();
+      goToProgramMenu();
     }
     return;
   }
   if (state.mode === 'formulaSelect') {
     goToProgramMenu();
   }
+}
+
+function stepDecisionBack() {
+  const step = getActiveStep();
+  if (!step) return false;
+
+  const decisionId = DECISION_FLOW[state.decisionIndex];
+
+  if (decisionId === 'duration') {
+    if (state.durationStage > 0) {
+      state.durationStage -= 1;
+      return true;
+    }
+  } else if (decisionId === 'chemicals') {
+    ensureChemicalStage(step);
+    switch (state.chemicalStage) {
+      case 'signal':
+        state.chemicalStage = 'duration';
+        return true;
+      case 'duration':
+        state.chemicalStage = 'start';
+        return true;
+      case 'start':
+        state.chemicalStage = 'number';
+        return true;
+      case 'number':
+      default:
+        if (state.chemicalIndex > 0) {
+          state.chemicalIndex -= 1;
+          state.workingChemical =
+            cloneChemical(step.chemicals[state.chemicalIndex]) || createChemical();
+          state.chemicalStage = 'signal';
+          return true;
+        }
+        break;
+    }
+  }
+
+  const previous = findPreviousDecisionIndex(state.decisionIndex, step);
+  if (previous === -1) return false;
+
+  state.decisionIndex = previous;
+  setDecisionCursorToLastPosition(DECISION_FLOW[previous], step);
+  return true;
 }
 
 function handleDeleteStep() {
@@ -626,6 +675,21 @@ function exitStepDecisionMode() {
   resetChemicalState();
   resetDurationStage();
   render();
+}
+
+function setDecisionCursorToLastPosition(decisionId, step) {
+  if (decisionId === 'duration') {
+    state.durationStage = 2;
+  }
+
+  if (decisionId === 'chemicals') {
+    const count = step?.chemicals?.length ?? 0;
+    const lastIndex = clamp(count - 1, 0, MAX_CHEMICALS - 1);
+    state.chemicalIndex = lastIndex;
+    state.workingChemical =
+      cloneChemical(step.chemicals[lastIndex]) || createChemical();
+    state.chemicalStage = count > 0 ? 'signal' : 'number';
+  }
 }
 
 function updateDisplayLine(line, text) {
@@ -1046,6 +1110,15 @@ function ensureStep(index) {
 
 function findNextDecisionIndex(currentIndex, step) {
   for (let i = currentIndex + 1; i < DECISION_FLOW.length; i += 1) {
+    if (isDecisionActive(DECISION_FLOW[i], step)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function findPreviousDecisionIndex(currentIndex, step) {
+  for (let i = currentIndex - 1; i >= 0; i -= 1) {
     if (isDecisionActive(DECISION_FLOW[i], step)) {
       return i;
     }
